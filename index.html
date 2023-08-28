@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webserver</title>
+</head>
+<body>
+  <h1>Datos de Comunicaciones</h1>
+  
+  <ul id="data-list"></ul>
+
+  <script>
+    const socket = io();
+
+    // Función para agregar un nuevo elemento a la lista
+    function addDataToList(data) {
+      const dataList = document.getElementById('data-list');
+      const listItem = document.createElement('li');
+      listItem.textContent = data;
+      dataList.appendChild(listItem);
+    }
+
+    // Escuchar eventos de nuevos-datos desde el servidor
+    socket.on('nuevos-datos', newData => {
+      addDataToList(newData);
+    });
+  </script>
+  
+</body>
+</html>
