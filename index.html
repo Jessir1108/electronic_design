@@ -10,6 +10,7 @@
   
   <ul id="data-list"></ul>
 
+  <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
 
@@ -24,6 +25,12 @@
     // Escuchar eventos de nuevos-datos desde el servidor
     socket.on('nuevos-datos', newData => {
       addDataToList(newData);
+
+      // Actualizar automáticamente h3 con nuevos datos
+      const [latitude, longitude, time] = newData.split(', ');
+      document.getElementById('latitude').textContent = `Latitude: ${latitude}`;
+      document.getElementById('longitude').textContent = `Longitude: ${longitude}`;
+      document.getElementById('time').textContent = `Time: ${time}`;
     });
   </script>
   
