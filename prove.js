@@ -1,27 +1,13 @@
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const { Client } = require('pg');
 const moment = require('moment');
 
-// Datos de entrada
-const entrada = "Latitud: 10.913799, Longitud: -74.8216787, Tiempo: 1693275846840";
-let latitud = null;
-let longitud = null;
-let tiempo = null;
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
-// Procesar la entrada para obtener los valores
-entrada.split(', ').forEach(item => {
-    if (item.startsWith('Latitud:')) {
-        latitud = parseFloat(item.split(': ')[1]);
-    } else if (item.startsWith('Longitud:')) {
-        longitud = parseFloat(item.split(': ')[1]);
-    } else if (item.startsWith('Tiempo:')) {
-        tiempo = parseFloat(item.split(': ')[1]);
-    }
-});
-
-// Convertir tiempo a formato deseado
-const formattedTiempo = moment(tiempo).format('YYYY-MM-DD HH:mm:ss');
-
-// Configuración de la conexión a la base de datos
 const client = new Client({
     user: 'postgres',
     host: 'localhost',
@@ -30,27 +16,44 @@ const client = new Client({
     port: 5432,
 });
 
-// Conectar a la base de datos
-client.connect()
-    .then(() => {
-        // Insertar los valores en la base de datos
-        if (latitud !== null && longitud !== null && tiempo !== null) {
-            const query = 'INSERT INTO gps (latitud, longitud, tiempo) VALUES ($1, $2, $3)';
-            const values = [latitud, longitud, formattedTiempo]; // Usar tiempo formateado
-            
-            return client.query(query, values);
-        } else {
-            console.log('No se pudieron procesar todos los datos.');
-            return Promise.reject('Datos faltantes.');
-        }
-    })
-    .then(() => {
-        console.log('Datos insertados correctamente.');
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    })
-    .finally(() => {
-        // Cerrar la conexión
-        client.end();
+let interval;
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/main.html');
+});
+
+io.on('connection', (socket) => {
+    console.log('Cliente conectado');
+
+    // Iniciar la transmisión de datos
+    if (interval) {
+        clearInterval(interval);
+    }
+    interval = setInterval(() => fetchAndEmitData(socket), 8000); // Cada 8 segundos
+
+    socket.on('disconnect', () => {
+        console.log('Cliente desconectado');
+        clearInterval(interval);
     });
+});
+
+function fetchAndEmitData(socket) {
+    // Generar datos aleatorios
+    const randomLatitud = Math.random() * (90 - (-90)) + (-90);
+    const randomLongitud = Math.random() * (180 - (-180)) + (-180);
+    const randomTiempo = Date.now() - Math.floor(Math.random() * 60000); // Hasta 1 minuto en el pasado
+
+    const formattedTiempo = moment(randomTiempo).format('YYYY-MM-DD HH:mm:ss');
+
+    const randomData = {
+        latitud: randomLatitud.toFixed(6),
+        longitud: randomLongitud.toFixed(6),
+        tiempo: formattedTiempo,
+    };
+
+    socket.emit('update', randomData);
+}
+
+server.listen(3000, () => {
+    console.log('Servidor en ejecución en http://localhost:3000');
+});

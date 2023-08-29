@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebPage</title>
+</head>
+<body>
+
+    <p>Latitud: <span id="latitud"></span></p>
+    <p>Longitud: <span id="longitud"></span></p>
+    <p>Tiempo: <span id="tiempo"></span></p>
+
+
+    <!-- ... (resto del contenido del index.html) -->
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    function updateData(data) {
+        document.getElementById('latitud').textContent = data.latitud;
+        document.getElementById('longitud').textContent = data.longitud;
+        document.getElementById('tiempo').textContent = data.tiempo;
+    }
+
+    // Conectar al servidor de WebSocket
+    const socket = io();
+
+    // Escuchar el evento 'update' y actualizar los datos
+    socket.on('update', function(data) {
+        updateData(data);
+    });
+</script>
+
+
+</body>
+</html>
