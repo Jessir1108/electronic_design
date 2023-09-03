@@ -8,22 +8,25 @@
 <body>
   <h1>Datos de Comunicaciones</h1>
   
-  <p id="latitude"></p>
-  <p id="longitude"></p>
-  <p id="time"></p>
+  <p>Latitud: <span id="latitude"></span></p>
+  <p>Longitud: <span id="longitude"></span></p>
+  <p>Fecha: <span id="fecha"></span></p>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
 
-
-    // Función para actualizar los datos en los elementos <p>
+    // Función para actualizar los datos en los elementos <span>
     function updateData(data) {
-      const [latitude, longitude, time] = data.split(', ');
+      // Los datos de latitud, longitud y fecha ya se actualizan correctamente
+      const [latitudePart, longitudePart, fechaPart] = data.split(', ');
+      const latitude = parseFloat(latitudePart.split(': ')[1]);
+      const longitude = parseFloat(longitudePart.split(': ')[1]);
+      const fecha = fechaPart.split(': ')[1];
 
-      document.getElementById('latitude').textContent = ` ${latitude}`;
-      document.getElementById('longitude').textContent = ` ${longitude}`;
-      document.getElementById('time').textContent = ` ${time}`; // Mostrar el tiempo en formato Unix
+      document.getElementById('latitude').textContent = latitude;
+      document.getElementById('longitude').textContent = longitude;
+      document.getElementById('fecha').textContent = fecha;
     }
 
     // Escuchar eventos de nuevos-datos desde el servidor
@@ -31,6 +34,5 @@
       updateData(newData);
     });
   </script>
-  
 </body>
 </html>
