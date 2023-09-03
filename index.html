@@ -8,29 +8,27 @@
 <body>
   <h1>Datos de Comunicaciones</h1>
   
-  <ul id="data-list"></ul>
+  <p id="latitude"></p>
+  <p id="longitude"></p>
+  <p id="time"></p>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
 
-    // Función para agregar un nuevo elemento a la lista
-    function addDataToList(data) {
-      const dataList = document.getElementById('data-list');
-      const listItem = document.createElement('li');
-      listItem.textContent = data;
-      dataList.appendChild(listItem);
+
+    // Función para actualizar los datos en los elementos <p>
+    function updateData(data) {
+      const [latitude, longitude, time] = data.split(', ');
+
+      document.getElementById('latitude').textContent = ` ${latitude}`;
+      document.getElementById('longitude').textContent = ` ${longitude}`;
+      document.getElementById('time').textContent = ` ${time}`; // Mostrar el tiempo en formato Unix
     }
 
     // Escuchar eventos de nuevos-datos desde el servidor
     socket.on('nuevos-datos', newData => {
-      addDataToList(newData);
-
-      // Actualizar automáticamente h3 con nuevos datos
-      const [latitude, longitude, time] = newData.split(', ');
-      document.getElementById('latitude').textContent = `Latitude: ${latitude}`;
-      document.getElementById('longitude').textContent = `Longitude: ${longitude}`;
-      document.getElementById('time').textContent = `Time: ${time}`;
+      updateData(newData);
     });
   </script>
   
