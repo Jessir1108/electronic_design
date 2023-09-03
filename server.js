@@ -48,6 +48,7 @@ udpServer.on('message', (message, remote) => {
   const entrada = message.toString();
   let latitude = null;
   let longitude = null;
+  let date = null;
   let time = null;
 
   entrada.split(', ').forEach(item => {
@@ -56,13 +57,18 @@ udpServer.on('message', (message, remote) => {
     } else if (item.startsWith('Longitude:')) {
       longitude = parseFloat(item.split(': ')[1]);
     } else if (item.startsWith('Time:')) {
-      time =  parseFloat(item.split(': ')[1]);
+      // Dividir la fecha y la hora
+      const dateTimeStr = item.split(': ')[1];
+      const [dateStr, timeStr] = dateTimeStr.split(' ');
+
+      date = dateStr; // Mantener la fecha como una cadena en formato 'YYYY-MM-DD'
+      time = timeStr; // Mantener la hora como una cadena en formato 'HH:MM:SS'
     }
   });
 
-  if (latitude !== null && longitude !== null && time !== null) {
-    const insertQuery = 'INSERT INTO ubicaciones (latitud, longitud, tiempo) VALUES ($1, $2, $3) RETURNING *';
-    const values = [latitude, longitude, time];
+  if (latitude !== null && longitude !== null && date !== null && time !== null) {
+    const insertQuery = 'INSERT INTO coordenadas (Latitud, Longitud, Fecha, Hora) VALUES ($1, $2, $3, $4) RETURNING *';
+    const values = [latitude, longitude, date, time];
 
     dbClient.query(insertQuery, values)
       .then(result => {
