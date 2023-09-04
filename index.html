@@ -8,12 +8,15 @@
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
+
   <h1>Diseño Electrónico - Webserver</h1>
+  <h1>Diseño Electronico - Webserver</h1>
   <h1>Universidad del Norte</h1>
   
   <p>Latitud: <span id="latitude"></span></p>
   <p>Longitud: <span id="longitude"></span></p>
   <p>Fecha: <span id="fecha"></span></p>
+
 
   <div id="map" style="height: 400px;"></div>
 
@@ -24,10 +27,21 @@
     let marker;
 
     function updateData(data) {
+=======
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    // Función para actualizar los datos en los elementos <span>
+    function updateData(data) {
+      // Los datos de latitud, longitud y fecha ya se actualizan correctamente
+
       const [latitudePart, longitudePart, fechaPart] = data.split(', ');
       const latitude = parseFloat(latitudePart.split(': ')[1]);
       const longitude = parseFloat(longitudePart.split(': ')[1]);
       const fecha = fechaPart.split(': ')[1];
+
 
       // Actualizar las coordenadas en los elementos <span>
       document.getElementById('latitude').textContent = latitude;
@@ -52,6 +66,12 @@
       } else {
         marker.setLatLng(location);
       }
+
+
+      document.getElementById('latitude').textContent = latitude;
+      document.getElementById('longitude').textContent = longitude;
+      document.getElementById('fecha').textContent = fecha;
+
     }
 
     const socket = io();
