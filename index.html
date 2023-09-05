@@ -4,31 +4,57 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Webserver</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
-  <h1>Diseño Electronico - Webserver</h1>
+  <h1>Diseño Electrónico - Webserver</h1>
   <h1>Universidad del Norte</h1>
   
   <p>Latitud: <span id="latitude"></span></p>
   <p>Longitud: <span id="longitude"></span></p>
   <p>Fecha: <span id="fecha"></span></p>
 
+  <div id="map" style="height: 400px;"></div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io();
+    // Crear una variable global para el mapa y el marcador
+    let map;
+    let marker;
 
-    // Función para actualizar los datos en los elementos <span>
     function updateData(data) {
-      // Los datos de latitud, longitud y fecha ya se actualizan correctamente
       const [latitudePart, longitudePart, fechaPart] = data.split(', ');
       const latitude = parseFloat(latitudePart.split(': ')[1]);
       const longitude = parseFloat(longitudePart.split(': ')[1]);
       const fecha = fechaPart.split(': ')[1];
 
+      // Actualizar las coordenadas en los elementos <span>
       document.getElementById('latitude').textContent = latitude;
       document.getElementById('longitude').textContent = longitude;
       document.getElementById('fecha').textContent = fecha;
+
+      // Crear una ubicación con las coordenadas
+      const location = [latitude, longitude];
+
+      // Inicializar el mapa si aún no se ha creado
+      if (!map) {
+        map = L.map('map').setView(location, 15); // Ajusta el nivel de zoom según tus preferencias
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      } else {
+        // Si el mapa ya existe, simplemente centra el mapa en la nueva ubicación
+        map.setView(location);
+      }
+
+      // Agregar o actualizar el marcador en el mapa
+      if (!marker) {
+        marker = L.marker(location).addTo(map).bindPopup('Ubicación del dispositivo');
+      } else {
+        marker.setLatLng(location);
+      }
     }
+
+    const socket = io();
 
     // Escuchar eventos de nuevos-datos desde el servidor
     socket.on('nuevos-datos', newData => {
