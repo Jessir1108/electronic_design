@@ -1,29 +1,29 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const { Client } = require('pg');
+const mysql = require('mysql2'); // Utilizar el módulo mysql2 en lugar de pg
 const dgram = require('dgram');
 
 const app = express();
 const server = http.createServer(app);
 
 const dbConfig = {
-  user: 'postgres',
+  user: 'Jessir',
   host: 'localhost',
-  database: 'registro',
-  password: '12345678',
+  database: 'webserver',
+  password: 'uninorte',
   port: 5432,
 };
 
-const dbClient = new Client(dbConfig);
+const dbClient = mysql.createConnection(dbConfig); // Utilizar mysql.createConnection en lugar de new Client
 
-dbClient.connect()
-  .then(() => {
-    console.log('Conexión a la base de datos establecida');
-  })
-  .catch(err => {
+dbClient.connect(err => {
+  if (err) {
     console.error('Error al conectar a la base de datos:', err);
-  });
+  } else {
+    console.log('Conexión a la base de datos establecida');
+  }
+});
 
 const PORT = 3000;
 
@@ -67,19 +67,18 @@ udpServer.on('message', (message, remote) => {
   });
 
   if (latitude !== null && longitude !== null && date !== null && time !== null) {
-    const insertQuery = 'INSERT INTO coordenadas (Latitud, Longitud, Fecha, Hora) VALUES ($1, $2, $3, $4) RETURNING *';
+    const insertQuery = 'INSERT INTO coordenadas (Latitud, Longitud, Fecha, Hora) VALUES (?, ?, ?, ?)'; // Consulta SQL de MySQL
     const values = [latitude, longitude, date, time];
 
-    dbClient.query(insertQuery, values)
-      .then(result => {
-        const insertedData = result.rows[0];
-        console.log('Datos guardados en la base de datos:', insertedData);
+    dbClient.query(insertQuery, values, (err, result) => {
+      if (err) {
+        console.error('Error al guardar datos en la base de datos:', err);
+      } else {
+        console.log('Datos guardados en la base de datos:', result);
 
         io.emit('nuevos-datos', message.toString());
-      })
-      .catch(err => {
-        console.error('Error al guardar datos en la base de datos:', err);
-      });
+      }
+    });
   } else {
     console.log('No se pudieron procesar todos los datos.');
   }
