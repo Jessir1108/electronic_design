@@ -8,10 +8,10 @@ const app = express();
 const server = http.createServer(app);
 
 const dbConfig = {
-  user: 'Jessir',
+  user: 'postgres',
   host: 'localhost',
-  database: 'webserver',
-  password: 'uninorte',
+  database: 'registro',
+  password: '12345678',
   port: 5432,
 };
 
