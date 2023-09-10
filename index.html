@@ -78,14 +78,17 @@
 </head>
 <body>
 <<<<<<< HEAD
+<<<<<<< HEAD
   <i class="fa-solid fa-location-dot"></i>
 =======
 
 >>>>>>> 20f286a0664990e9b583f8c76bcb64e2f85d9c75
+=======
+>>>>>>> 123b3816702dea40915aeca4a0c77b54f3f84bfa
   <h1>Diseño Electrónico - Webserver</h1>
-  <h1>Diseño Electronico - Webserver</h1>
   <h1>Universidad del Norte</h1>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   <p class="latitude">Latitud: <span id="latitude"></span></p>
   <p class="longitude">Longitud: <span id="longitude"></span></p>
@@ -94,6 +97,8 @@
   <div id="map" style="height: 330px; margin-top: 70px;"></div>
 =======
 
+=======
+>>>>>>> 123b3816702dea40915aeca4a0c77b54f3f84bfa
   <div id="map" style="height: 400px;"></div>
 >>>>>>> 20f286a0664990e9b583f8c76bcb64e2f85d9c75
 
@@ -118,16 +123,6 @@
     const locationHistory = [];
   
     function updateData(data) {
-=======
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-
-    // Función para actualizar los datos en los elementos <span>
-    function updateData(data) {
-      // Los datos de latitud, longitud y fecha ya se actualizan correctamente
-
       const [latitudePart, longitudePart, fechaPart] = data.split(', ');
       const latitude = parseFloat(latitudePart.split(': ')[1]);
       const longitude = parseFloat(longitudePart.split(': ')[1]);
@@ -136,8 +131,11 @@
   
 =======
 
+<<<<<<< HEAD
 
 >>>>>>> 20f286a0664990e9b583f8c76bcb64e2f85d9c75
+=======
+>>>>>>> 123b3816702dea40915aeca4a0c77b54f3f84bfa
       // Actualizar las coordenadas en los elementos <span>
       document.getElementById('latitude').textContent = latitude;
       document.getElementById('longitude').textContent = longitude;
@@ -159,6 +157,7 @@
         marker.setLatLng(location);
       }
 <<<<<<< HEAD
+<<<<<<< HEAD
   
       // Dibujar la polilínea que traza el recorrido
       if (locationHistory.length > 1) {
@@ -176,6 +175,8 @@
       document.getElementById('fecha').textContent = fecha;
 
 >>>>>>> 20f286a0664990e9b583f8c76bcb64e2f85d9c75
+=======
+>>>>>>> 123b3816702dea40915aeca4a0c77b54f3f84bfa
     }
   
     const socket = io();
