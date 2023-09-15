@@ -89,3 +89,28 @@ udpServer.bind(UDP_PORT);
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
+
+app.get('/consultar', (req, res) => {
+  const { fechaInicio, horaInicio, fechaFin, horaFin } = req.query;
+
+  const consultaSQL = `
+    SELECT latitud, longitud, fecha, hora
+    FROM coordenadas
+    WHERE (fecha > ? OR (fecha = ? AND hora >= ?))
+      AND (fecha < ? OR (fecha = ? AND hora <= ?));
+  `;
+
+  dbClient.query(
+    consultaSQL,
+    [fechaInicio, fechaInicio, horaInicio, fechaFin, fechaFin, horaFin],
+    (err, results) => {
+      if (err) {
+        console.error('Error al realizar la consulta:', err);
+        res.status(500).json({ error: 'Error en la consulta' });
+      } else {
+        // Devolver los resultados como JSON
+        res.json(results);
+      }
+    }
+  );
+});

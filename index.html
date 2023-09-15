@@ -15,13 +15,52 @@
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif ;
   }
   h1 {
-    font-size: 20px;
-    font-weight: 200;
+    font-size: 25px;
+    font-weight: 100;
+    margin-bottom: 15px;
     color: #333;
-    background-color: #EEEEEE;
-    padding: 15px;
-    border-radius: 9px;
+    padding: 24px;
   }
+  /* Estilo para los contenedores div */
+  div {
+    margin-bottom: 20px; /* Agrega espacio entre cada div */
+  }
+
+  /* Estilo para las etiquetas label */
+  label {
+    font-weight: bold;
+  }
+
+  /* Estilo para los campos de entrada input */
+  input {
+    width: 100%; /* Ajusta el ancho al 100% del contenedor div */
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  /* Estilo para el botón */
+  #consultar {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  /* Estilo para la lista ul */
+  ul {
+    list-style-type: none; /* Quita los puntos de lista */
+    padding: 0;
+  }
+
+  /* Estilo para los elementos de lista li */
+  li {
+    margin-bottom: 5px; /* Agrega espacio entre cada elemento de la lista */
+  }
+
   p {
     font-size: 16px;
     font-weight: normal;
@@ -29,6 +68,7 @@
     
   }
   
+
   span {
     font-weight: bold;
   }
@@ -55,6 +95,7 @@
     padding: 8px;
     border-radius: 9px;
     width: 15%;
+    margin-bottom: 60px;
   }
   .fa-solid.fa-location-dot {
     position: absolute;
@@ -79,11 +120,68 @@
 <body>
     <i class="fa-solid fa-location-dot"></i>
    <h1>Diseño Electrónico - Webserver</h1>
-  <h1>Universidad del Norte</h1>
 
   <p class="latitude">Latitud: <span id="latitude"></span></p>
   <p class="longitude">Longitud: <span id="longitude"></span></p>
   <p class="fecha">Fecha: <span id="fecha"></span></p>
+
+
+<div>
+  <label for="fechaInicio">Fecha de Inicio:</label>
+  <input type="date" id="fechaInicio" min="2023-04-21" value="2023-04-21">
+</div>
+
+<div>
+  <label for="horaInicio">Hora de inicio:</label>
+  <input type="time" id="horaInicio" value="23:00">
+</div>
+
+<div>
+  <label for="fechaFin">Fecha de Fin:</label>
+  <input type="date" id="fechaFin" min="2023-04-21" value="2023-04-21">
+</div>
+
+
+<div>
+  <label for="horaFin">Hora de fin:</label>
+  <input type="time" id="horaFin" value="23:10"></label>
+</div>
+
+<button id="consultar">Consultar</button>
+
+<ul id="resultado">
+  <!-- Aquí se mostrarán los resultados de la consulta -->
+</ul>
+
+<script>
+  const consultarButton = document.getElementById('consultar');
+  const resultadoList = document.getElementById('resultado');
+
+  consultarButton.addEventListener('click', () => {
+    // Obtener los valores ingresados por el usuario
+    const fechaInicio = document.getElementById('fechaInicio').value;
+    const horaInicio = document.getElementById('horaInicio').value;
+    const fechaFin = document.getElementById('fechaFin').value;
+    const horaFin = document.getElementById('horaFin').value;
+
+    // Realizar la solicitud al servidor para obtener los datos
+    fetch(`/consultar?fechaInicio=${fechaInicio}&horaInicio=${horaInicio}&fechaFin=${fechaFin}&horaFin=${horaFin}`)
+      .then(response => response.json())
+      .then(data => {
+        // Limpiar la lista de resultados
+        resultadoList.innerHTML = '';
+
+        // Mostrar los resultados en la lista
+        data.forEach(item => {
+          const listItem = document.createElement('li');
+          listItem.textContent = `Latitud: ${item.latitud}, Longitud: ${item.longitud}, Fecha: ${item.fecha}, Hora: ${item.hora}`;
+          resultadoList.appendChild(listItem);
+        });
+      })
+      .catch(error => console.error('Error al realizar la consulta:', error));
+  });
+</script>
+
 
   <div id="map" style="height: 330px; margin-top: 70px;"></div>
 
