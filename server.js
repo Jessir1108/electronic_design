@@ -7,6 +7,8 @@ const dgram = require('dgram');
 const app = express();
 const server = http.createServer(app);
 const config = require('./config.json');
+const path = require('path');
+
 
 // Accede a las variables de configuración
 const user = config.user;
