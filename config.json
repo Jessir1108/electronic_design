@@ -1,0 +1,8 @@
+{
+    "user": "root",
+    "host": "mydbs.cuuo9scbn0zr.us-east-2.rds.amazonaws.com",
+    "database": "webserver",
+    "password": "jessir123",
+    "port": 3306
+  }
+  

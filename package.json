@@ -9,6 +9,7 @@
   "author": "Jessir Florez",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "moment": "^2.29.4",
     "mongoose": "^7.4.5",

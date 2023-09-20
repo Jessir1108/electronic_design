@@ -6,16 +6,20 @@ const dgram = require('dgram');
 
 const app = express();
 const server = http.createServer(app);
+const config = require('./config.json');
 
-const dbConfig = {
-  user: 'root',
-  host: 'mydbs.cuuo9scbn0zr.us-east-2.rds.amazonaws.com',
-  database: 'webserver',
-  password: 'jessir123',
-  port: 3306, // Puerto por defecto de MySQL
-};
+// Accede a las variables de configuración
+const user = config.user;
+const host = config.host;
+const database = config.database;
+const password = config.password;
+const port = config.port;
 
-const dbClient = mysql.createConnection(dbConfig); // Utilizar mysql.createConnection en lugar de new Client
+// Ahora puedes usar estas variables en tu código
+console.log(`Conectándose a la base de datos en ${host}:${port} como ${user}`);
+
+
+const dbClient = mysql.createConnection(config); // Utilizar mysql.createConnection en lugar de new Client
 
 dbClient.connect(err => {
   if (err) {
