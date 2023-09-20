@@ -21,6 +21,8 @@ console.log(`Conectándose a la base de datos en ${host}:${port} como ${user}`);
 
 const dbClient = mysql.createConnection(config); // Utilizar mysql.createConnection en lugar de new Client
 
+app.use(express.static(path.join(__dirname + '/public/'))); //path
+
 dbClient.connect(err => {
   if (err) {
     console.error('Error al conectar a la base de datos:', err);
@@ -90,9 +92,16 @@ udpServer.on('message', (message, remote) => {
 
 udpServer.bind(UDP_PORT);
 
+
+
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(path.join(__dirname + '/index.html'));
 });
+
+app.get('/css/style.css', (req, res) => {
+  res.sendFile(path.join(__dirname + '/css/style.css'));
+});
+
 
 app.get('/consultar', (req, res) => {
   const { fechaInicio, horaInicio, fechaFin, horaFin } = req.query;
