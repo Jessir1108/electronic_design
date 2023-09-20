@@ -4,251 +4,188 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Webserver</title>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <link rel="styleshgiteet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" 
-  integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" 
-  referrerpolicy="no-referrer" />
-  <style>
-    body{
-    background-color: #0a5858;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif ;
-  }
-  h1 {
-    font-size: 25px;
-    font-weight: 100;
-    margin-bottom: 15px;
-    color: #333;
-    padding: 24px;
-  }
-  /* Estilo para los contenedores div */
-  div {
-    margin-bottom: 20px; /* Agrega espacio entre cada div */
-  }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="\scripts\scrip.js" defer></script>
 
-  /* Estilo para las etiquetas label */
-  label {
-    font-weight: bold;
-  }
-
-  /* Estilo para los campos de entrada input */
-  input {
-    width: 100%; /* Ajusta el ancho al 100% del contenedor div */
-    padding: 5px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-
-  /* Estilo para el botón */
-  #consultar {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  /* Estilo para la lista ul */
-  ul {
-    list-style-type: none; /* Quita los puntos de lista */
-    padding: 0;
-  }
-
-  /* Estilo para los elementos de lista li */
-  li {
-    margin-bottom: 5px; /* Agrega espacio entre cada elemento de la lista */
-  }
-
-  p {
-    font-size: 16px;
-    font-weight: normal;
-    color: #333;
-    
-  }
-  
-
-  span {
-    font-weight: bold;
-  }
-
-  .fecha {
-    text-align: left;
-    margin-left: 35%;
-    margin-top: -100px;
-    background-color: #EEEEEE;
-    padding: 8px;
-    border-radius: 9px;
-    width: 15%;
-
-  }
-  .latitude{
-    background-color: #EEEEEE;
-    padding: 8px;
-    border-radius: 9px;
-    width: 15%;
-  }
-
-  .longitude{
-    background-color: #EEEEEE;
-    padding: 8px;
-    border-radius: 9px;
-    width: 15%;
-    margin-bottom: 60px;
-  }
-  .fa-solid.fa-location-dot {
-    position: absolute;
-    right: 3%;
-    top: 3%;
-    font-size: 40px;
-    color: #ff0000;
-    animation: jump 6s ease infinite; /* Agrega una animación llamada "jump" con una duración de 1 segundo y se repite infinitamente */
-    transform-origin: center; /* Establece el punto de origen de la transformación en el centro del icono */
-}
-
-@keyframes jump {
-    0%, 100% {
-        transform: translateY(0); /* Sin cambio en la posición vertical */
-    }
-    50% {
-        transform: translateY(-20px); /* Salto hacia arriba */
-    }
-}
-  </style>
 </head>
 <body>
-    <i class="fa-solid fa-location-dot"></i>
-   <h1>Diseño Electrónico - Webserver</h1>
+    <div class = "Title">
+      <h1>GpsRoad</h1>
+    </div>
+    <i class="fa-solid fa-car"></i>
 
-  <p class="latitude">Latitud: <span id="latitude"></span></p>
-  <p class="longitude">Longitud: <span id="longitude"></span></p>
-  <p class="fecha">Fecha: <span id="fecha"></span></p>
+    <div class = "menu">
+      <p data-target = "#Live" id = "#Live">Live </p>
+      <p data-target = "#Historial" id = "#Historial" >Historial</p>
+    </div>
 
+    <div class="content">
+      <p class="latitude" data-content id="Live">Latitud: <span id="latitude"></span></p>
+      <p class="longitude" data-content id="Live">Longitud: <span id="longitude"></span></p>
+      <p class="fecha" data-content id ="Live">Fecha: <span id="fecha"></span></p>
+      <button id="limpiar" data-content id ="Live">Limpiar</button>
+    </div>
 
-<div>
-  <label for="fechaInicio">Fecha de Inicio:</label>
-  <input type="date" id="fechaInicio" min="2023-04-21" value="2023-04-21">
-</div>
+    <div class = "Historial">
+      <label for="fechaInicio">Fecha de Inicio:</label>
+      <input type="date" id="fechaInicio" min="2023-04-21" value="2023-04-21">
 
-<div>
-  <label for="horaInicio">Hora de inicio:</label>
-  <input type="time" id="horaInicio" value="23:00">
-</div>
+      <label for="horaInicio">Hora de inicio:</label>
+      <input type="time" id="horaInicio" value="23:00">
 
-<div>
-  <label for="fechaFin">Fecha de Fin:</label>
-  <input type="date" id="fechaFin" min="2023-04-21" value="2023-04-21">
-</div>
+      <label for="fechaFin">Fecha de Fin:</label>
+      <input type="date" id="fechaFin" min="2023-04-21" value="2023-04-21">
 
+      <label for="horaFin">Hora de fin:</label>
+      <input type="time" id="horaFin" value="23:10">
+      
+      <button id="consultar">Consultar</button>
+    </div>
 
-<div>
-  <label for="horaFin">Hora de fin:</label>
-  <input type="time" id="horaFin" value="23:10"></label>
-</div>
+    <ul id="resultado">
+      <!-- Aquí se mostrarán los resultados de la consulta -->
+    </ul>
 
-<button id="consultar">Consultar</button>
+    <div id="map" style="height: 330px; margin-top: 70px;"></div>
 
-<ul id="resultado">
-  <!-- Aquí se mostrarán los resultados de la consulta -->
-</ul>
+    <label for="historialSlider">Seleccionar punto en el historial:</label>
+    <input type="range" id="historialSlider" min="0" max="0" step="1" value="0">
 
-<script>
-  const consultarButton = document.getElementById('consultar');
-  const resultadoList = document.getElementById('resultado');
-
-  consultarButton.addEventListener('click', () => {
-    // Obtener los valores ingresados por el usuario
-    const fechaInicio = document.getElementById('fechaInicio').value;
-    const horaInicio = document.getElementById('horaInicio').value;
-    const fechaFin = document.getElementById('fechaFin').value;
-    const horaFin = document.getElementById('horaFin').value;
-
-    // Realizar la solicitud al servidor para obtener los datos
-    fetch(`/consultar?fechaInicio=${fechaInicio}&horaInicio=${horaInicio}&fechaFin=${fechaFin}&horaFin=${horaFin}`)
-      .then(response => response.json())
-      .then(data => {
-        // Limpiar la lista de resultados
-        resultadoList.innerHTML = '';
-
-        // Mostrar los resultados en la lista
-        data.forEach(item => {
-          const listItem = document.createElement('li');
-          listItem.textContent = `Latitud: ${item.latitud}, Longitud: ${item.longitud}, Fecha: ${item.fecha}, Hora: ${item.hora}`;
-          resultadoList.appendChild(listItem);
-        });
-      })
-      .catch(error => console.error('Error al realizar la consulta:', error));
-  });
-</script>
-
-
-  <div id="map" style="height: 330px; margin-top: 70px;"></div>
-
-  <script src="/socket.io/socket.io.js"></script>
   <script>
-    // JavaScript para manejar la actualización de datos y el mapa en tiempo real
+    const consultarButton = document.getElementById('consultar');
+    const resultadoList = document.getElementById('resultado');
     let map;
     let marker;
-    let polyline; // Variable para la polilínea que traza el recorrido
+    let polyline;
+    const locationHistory = [];
+    let modo = "Live"
 
-     // Inicializar el mapa si aún no se ha creado
-     function initializeMap() {
-      map = L.map('map').setView([10.9854, -74.7769], 15); // Ajustar el nivel de zoom a 15
+    function initializeMap() {
+      map = L.map('map').setView([10.9854, -74.7769], 15);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      setupSlider();
     }
 
     window.addEventListener('load', () => {
       initializeMap();
     });
-  
-    // Historial de ubicaciones
-    const locationHistory = [];
-  
+
+    function setupSlider() {
+      const slider = document.getElementById('historialSlider');
+      slider.addEventListener('input', () => {
+        const selectedIndex = slider.value;
+        updateMarker(selectedIndex);
+      });
+    }
+
+    consultarButton.addEventListener('click', () => {
+      const fechaInicio = document.getElementById('fechaInicio').value;
+      const horaInicio = document.getElementById('horaInicio').value;
+      const fechaFin = document.getElementById('fechaFin').value;
+      const horaFin = document.getElementById('horaFin').value;
+
+      fetch(`/consultar?fechaInicio=${fechaInicio}&horaInicio=${horaInicio}&fechaFin=${fechaFin}&horaFin=${horaFin}`)
+        .then(response => response.json())
+        .then(data => {
+          locationHistory.length = 0; // Limpiar historial al consultar
+
+          data.forEach((item, index) => {
+            const [latitud, longitud, fecha, hora] = [item.latitud, item.longitud, item.fecha, item.hora];
+            updateData(`Latitud: ${latitud}, Longitud: ${longitud}, Fecha: ${fecha}, Hora: ${hora}`);
+            document.getElementById('historialSlider').max = index; // Actualiza la cantidad máxima del deslizador
+          });
+        })
+        .catch(error => console.error('Error al realizar la consulta:', error));
+    });
+
+    function updateMarker(selectedIndex) {
+      if (locationHistory.length > 0) {
+        const selectedLocation = locationHistory[selectedIndex];
+        marker.setLatLng(selectedLocation);
+        map.setView(selectedLocation);
+      }
+    }
+
     function updateData(data) {
       const [latitudePart, longitudePart, fechaPart] = data.split(', ');
       const latitude = parseFloat(latitudePart.split(': ')[1]);
       const longitude = parseFloat(longitudePart.split(': ')[1]);
       const fecha = fechaPart.split(': ')[1];
   
-      // Actualizar las coordenadas en los elementos <span>
+
       document.getElementById('latitude').textContent = latitude;
       document.getElementById('longitude').textContent = longitude;
       document.getElementById('fecha').textContent = fecha;
-  
-      // Crear una ubicación con las coordenadas
+
       const location = [latitude, longitude];
-  
-      // Agregar la ubicación actual al historial
+
       locationHistory.push(location);
-  
+
       map.setView(location);
 
-  
-      // Agregar o actualizar el marcador en el mapa
       if (!marker) {
         marker = L.marker(location).addTo(map).bindPopup('Ubicación del dispositivo');
       } else {
         marker.setLatLng(location);
       }
-  
-      // Dibujar la polilínea que traza el recorrido
+
       if (locationHistory.length > 1) {
         if (!polyline) {
-          polyline = L.polyline(locationHistory, { color: 'blue', weight: 3, dashArray: '5, 10'}).addTo(map);
+          polyline = L.polyline(locationHistory, { color: 'blue', weight: 3, dashArray: '5, 10' }).addTo(map);
         } else {
           polyline.setLatLngs(locationHistory);
         }
       }
+
+      const limpiarButton = document.getElementById('limpiar');
+      limpiarButton.addEventListener('click', () => {
+        clearPolyline();
+      });
+
+      // Función para borrar la polilínea
+      function clearPolyline() {
+        if (polyline) {
+          map.removeLayer(polyline);
+          polyline = null;
+        }
+      }
+
+      document.getElementById('historialSlider').max = locationHistory.length - 1; // Actualiza la cantidad máxima del deslizador
+      document.getElementById('historialSlider').value = locationHistory.length - 1; // Actualiza el valor actual del deslizador
+      updateMarker(locationHistory.length - 1);
     }
+
+    function clearMap() {
+      if (marker) {
+        map.removeLayer(marker);
+        marker = null;
+      }
+      if (polyline) {
+        map.removeLayer(polyline);
+        polyline = null;
+      }
+      locationHistory.length = 0;
+      document.getElementById('historialSlider').max = 0;
+      document.getElementById('historialSlider').value = 0;
+    }
+  </script>
+
+
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
   
     const socket = io();
-  
-    // Escuchar eventos de nuevos-datos desde el servidor
+
     socket.on('nuevos-datos', newData => {
-      updateData(newData);
+      if (modo === "Live") {
+        updateData(newData);
+      }
     });
   </script>
-  
 </body>
 </html>

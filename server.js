@@ -7,15 +7,19 @@ const dgram = require('dgram');
 const app = express();
 const server = http.createServer(app);
 
+const path = require("path");
+
 const dbConfig = {
   user: 'root',
-  host: 'mydbs.cuuo9scbn0zr.us-east-2.rds.amazonaws.com',
-  database: 'webserver',
-  password: 'jessir123',
+  host: 'localhost',
+  database: 'webserver',  
+  password: '12345',
   port: 3306, // Puerto por defecto de MySQL
 };
 
 const dbClient = mysql.createConnection(dbConfig); // Utilizar mysql.createConnection en lugar de new Client
+
+app.use(express.static(path.join(__dirname + '/public/'))); //path
 
 dbClient.connect(err => {
   if (err) {
@@ -86,9 +90,16 @@ udpServer.on('message', (message, remote) => {
 
 udpServer.bind(UDP_PORT);
 
+
+
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(path.join(__dirname + '/index.html'));
 });
+
+app.get('/css/style.css', (req, res) => {
+  res.sendFile(path.join(__dirname + '/css/style.css'));
+});
+
 
 app.get('/consultar', (req, res) => {
   const { fechaInicio, horaInicio, fechaFin, horaFin } = req.query;
