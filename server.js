@@ -6,7 +6,10 @@ const dgram = require('dgram');
 
 const app = express();
 const server = http.createServer(app);
+const config = require('./config.json');
+const path = require('path');
 
+<<<<<<< HEAD
 const dbConfig = {
   user: 'Jessir',
   host: 'localhost',
@@ -14,8 +17,23 @@ const dbConfig = {
   password: 'uninorte',
   port: 5432,
 };
+=======
+>>>>>>> 0a59c3a8cc0336748735da96e31107e0a59b5b3b
 
-const dbClient = mysql.createConnection(dbConfig); // Utilizar mysql.createConnection en lugar de new Client
+// Accede a las variables de configuración
+const user = config.user;
+const host = config.host;
+const database = config.database;
+const password = config.password;
+const port = config.port;
+
+// Ahora puedes usar estas variables en tu código
+console.log(`Conectándose a la base de datos en ${host}:${port} como ${user}`);
+
+
+const dbClient = mysql.createConnection(config); // Utilizar mysql.createConnection en lugar de new Client
+
+app.use(express.static(path.join(__dirname + '/public/'))); //path
 
 dbClient.connect(err => {
   if (err) {
@@ -86,9 +104,16 @@ udpServer.on('message', (message, remote) => {
 
 udpServer.bind(UDP_PORT);
 
+
+
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(path.join(__dirname + '/index.html'));
 });
+
+app.get('/css/style.css', (req, res) => {
+  res.sendFile(path.join(__dirname + '/css/style.css'));
+});
+
 
 app.get('/consultar', (req, res) => {
   const { fechaInicio, horaInicio, fechaFin, horaFin } = req.query;

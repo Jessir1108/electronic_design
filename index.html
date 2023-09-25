@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webserver</title>
+  <title> Juan David</title>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <!-- <link rel="stylesheet" type="text/css" href="Style.css"> -->
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<<<<<<< HEAD
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" 
   integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" 
   referrerpolicy="no-referrer" />
@@ -81,11 +83,24 @@
   <i class="fa-solid fa-location-dot"></i>
   <h1>Diseño Electrónico - Webserver</h1>
   <h1>Universidad del Norte</h1>
+=======
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="\scripts\scrip.js" defer></script>
 
-  <p class="latitude">Latitud: <span id="latitude"></span></p>
-  <p class="longitude">Longitud: <span id="longitude"></span></p>
-  <p class="fecha">Fecha: <span id="fecha"></span></p>
+</head>
+<body>
+    <div class = "Title">
+      <h1>GpsRoad</h1>
+    </div>
+    <i class="fa-solid fa-car"></i>
+>>>>>>> 0a59c3a8cc0336748735da96e31107e0a59b5b3b
 
+    <div class = "menu">
+      <p data-target = "#Live" id = "#Live">Live </p>
+      <p data-target = "#Historial" id = "#Historial" >Historial</p>
+    </div>
+
+<<<<<<< HEAD
   <div id="map" style="height: 400px; margin-top: 70px;"></div>
 
   <script src="/socket.io/socket.io.js"></script>
@@ -94,17 +109,112 @@
     let map;
     let marker;
 
+=======
+    <div class="content">
+      <p class="latitude" data-content id="Live">Latitud: <span id="latitude"></span></p>
+      <p class="longitude" data-content id="Live">Longitud: <span id="longitude"></span></p>
+      <p class="fecha" data-content id ="Live">Fecha: <span id="fecha"></span></p>
+      <button id="limpiar" data-content id ="Live">Limpiar</button>
+    </div>
+
+    <div class = "Historial">
+      <label for="fechaInicio">Fecha de Inicio:</label>
+      <input type="date" id="fechaInicio" min="2023-04-21" value="2023-04-21">
+
+      <label for="horaInicio">Hora de inicio:</label>
+      <input type="time" id="horaInicio" value="23:00">
+
+      <label for="fechaFin">Fecha de Fin:</label>
+      <input type="date" id="fechaFin" min="2023-04-21" value="2023-04-21">
+
+      <label for="horaFin">Hora de fin:</label>
+      <input type="time" id="horaFin" value="23:10">
+      
+      <button id="consultar">Consultar</button>
+    </div>
+
+    <ul id="resultado">
+      <!-- Aquí se mostrarán los resultados de la consulta -->
+    </ul>
+
+    <div id="map" style="height: 330px; margin-top: 70px;"></div>
+
+    <label for="historialSlider">Seleccionar punto en el historial:</label>
+    <input type="range" id="historialSlider" min="0" max="0" step="1" value="0">
+
+  <script>
+    const consultarButton = document.getElementById('consultar');
+    const resultadoList = document.getElementById('resultado');
+    let map;
+    let marker;
+    let polyline;
+    const locationHistory = [];
+    let modo = "Live"
+
+    function initializeMap() {
+      map = L.map('map').setView([10.9854, -74.7769], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      setupSlider();
+    }
+
+    window.addEventListener('load', () => {
+      initializeMap();
+    });
+
+    function setupSlider() {
+      const slider = document.getElementById('historialSlider');
+      slider.addEventListener('input', () => {
+        const selectedIndex = slider.value;
+        updateMarker(selectedIndex);
+      });
+    }
+
+    consultarButton.addEventListener('click', () => {
+      const fechaInicio = document.getElementById('fechaInicio').value;
+      const horaInicio = document.getElementById('horaInicio').value;
+      const fechaFin = document.getElementById('fechaFin').value;
+      const horaFin = document.getElementById('horaFin').value;
+
+      fetch(`/consultar?fechaInicio=${fechaInicio}&horaInicio=${horaInicio}&fechaFin=${fechaFin}&horaFin=${horaFin}`)
+        .then(response => response.json())
+        .then(data => {
+          locationHistory.length = 0; // Limpiar historial al consultar
+
+          data.forEach((item, index) => {
+            const [latitud, longitud, fecha, hora] = [item.latitud, item.longitud, item.fecha, item.hora];
+            updateData(`Latitud: ${latitud}, Longitud: ${longitud}, Fecha: ${fecha}, Hora: ${hora}`);
+            document.getElementById('historialSlider').max = index; // Actualiza la cantidad máxima del deslizador
+          });
+        })
+        .catch(error => console.error('Error al realizar la consulta:', error));
+    });
+
+    function updateMarker(selectedIndex) {
+      if (locationHistory.length > 0) {
+        const selectedLocation = locationHistory[selectedIndex];
+        marker.setLatLng(selectedLocation);
+        map.setView(selectedLocation);
+      }
+    }
+
+>>>>>>> 0a59c3a8cc0336748735da96e31107e0a59b5b3b
     function updateData(data) {
       const [latitudePart, longitudePart, fechaPart] = data.split(', ');
       const latitude = parseFloat(latitudePart.split(': ')[1]);
       const longitude = parseFloat(longitudePart.split(': ')[1]);
       const fecha = fechaPart.split(': ')[1];
+<<<<<<< HEAD
 
       // Actualizar las coordenadas en los elementos <span>
+=======
+  
+
+>>>>>>> 0a59c3a8cc0336748735da96e31107e0a59b5b3b
       document.getElementById('latitude').textContent = latitude;
       document.getElementById('longitude').textContent = longitude;
       document.getElementById('fecha').textContent = fecha;
 
+<<<<<<< HEAD
       // Crear una ubicación con las coordenadas
       const location = [latitude, longitude];
 
@@ -118,18 +228,81 @@
       }
 
       // Agregar o actualizar el marcador en el mapa
+=======
+      const location = [latitude, longitude];
+
+      locationHistory.push(location);
+
+      map.setView(location);
+
+>>>>>>> 0a59c3a8cc0336748735da96e31107e0a59b5b3b
       if (!marker) {
         marker = L.marker(location).addTo(map).bindPopup('Ubicación del dispositivo');
       } else {
         marker.setLatLng(location);
       }
+<<<<<<< HEAD
     }
 
     const socket = io();
 
     // Escuchar eventos de nuevos-datos desde el servidor
+=======
+
+      if (locationHistory.length > 1) {
+        if (!polyline) {
+          polyline = L.polyline(locationHistory, { color: 'blue', weight: 3, dashArray: '5, 10' }).addTo(map);
+        } else {
+          polyline.setLatLngs(locationHistory);
+        }
+      }
+
+      const limpiarButton = document.getElementById('limpiar');
+      limpiarButton.addEventListener('click', () => {
+        clearPolyline();
+      });
+
+      // Función para borrar la polilínea
+      function clearPolyline() {
+        if (polyline) {
+          map.removeLayer(polyline);
+          polyline = null;
+        }
+      }
+
+      document.getElementById('historialSlider').max = locationHistory.length - 1; // Actualiza la cantidad máxima del deslizador
+      document.getElementById('historialSlider').value = locationHistory.length - 1; // Actualiza el valor actual del deslizador
+      updateMarker(locationHistory.length - 1);
+    }
+
+    function clearMap() {
+      if (marker) {
+        map.removeLayer(marker);
+        marker = null;
+      }
+      if (polyline) {
+        map.removeLayer(polyline);
+        polyline = null;
+      }
+      locationHistory.length = 0;
+      document.getElementById('historialSlider').max = 0;
+      document.getElementById('historialSlider').value = 0;
+    }
+  </script>
+
+
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+  
+    const socket = io();
+
+>>>>>>> 0a59c3a8cc0336748735da96e31107e0a59b5b3b
     socket.on('nuevos-datos', newData => {
-      updateData(newData);
+      if (modo === "Live") {
+        updateData(newData);
+      }
     });
   </script>
 </body>
