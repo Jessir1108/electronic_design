@@ -56,7 +56,9 @@ document.querySelector('p[data-target="#Live"]').addEventListener('click', mostr
 document.querySelector('p[data-target="#Historial"]').addEventListener('click', mostrarHistorial);
 
 // Inicialmente, ocultar el contenido de Live y Historial
-mostrarLive();
+ocultarLive();
+ocultarHistorial();
+
   
   
   
