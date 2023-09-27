@@ -193,6 +193,10 @@
         // Mostrar mensaje de error en el index
         document.getElementById('errorMensaje').innerText = 'La hora inicial no puede ser mayor que la hora final en la misma fecha.';
         return; // Salir de la función si hay un error
+       } else if (isNaN(fechaInicioObj.getTime()) || isNaN(fechaFinObj.getTime())) {
+      // Mostrar mensaje de error en el index
+        document.getElementById('errorMensaje').innerText = 'No hay datos en las fechas indicadas.';
+        return; 
       } else {
         // Si las fechas y horas son válidas, oculta el mensaje de error
         document.getElementById('errorMensaje').innerText = ''; // Vacía el contenido del mensaje de error
