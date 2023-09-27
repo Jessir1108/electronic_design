@@ -198,23 +198,6 @@
         document.getElementById('errorMensaje').innerText = ''; // Vacía el contenido del mensaje de error
       }
 
-      // Validación de fechas
-      const fechaInicioObj = new Date(fechaInicio);
-      const fechaFinObj = new Date(fechaFin);
-
-      if (fechaInicioObj > fechaFinObj) {
-        // Mostrar mensaje de error en el index
-        document.getElementById('errorMensaje').innerText = 'La fecha inicial no puede ser posterior a la fecha final.';
-        return; // Salir de la función si hay un error
-      } else if (fechaInicioObj.getTime() === fechaFinObj.getTime() && horaInicio > horaFin) {
-        // Mostrar mensaje de error en el index
-        document.getElementById('errorMensaje').innerText = 'La hora inicial no puede ser mayor que la hora final en la misma fecha.';
-        return; // Salir de la función si hay un error
-      } else {
-        // Si las fechas y horas son válidas, oculta el mensaje de error
-        document.getElementById('errorMensaje').innerText = ''; // Vacía el contenido del mensaje de error
-      }
-
       fetch(`/consultar?fechaInicio=${fechaInicio}&horaInicio=${horaInicio}&fechaFin=${fechaFin}&horaFin=${horaFin}`)
         .then(response => response.json())
         .then(data => {
