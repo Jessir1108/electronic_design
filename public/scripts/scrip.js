@@ -4,6 +4,8 @@ function mostrarLive() {
 
         modo = "Live";
         clearMap();
+        removeRectangle();
+        removeclick();
 
         
     }
