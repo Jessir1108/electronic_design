@@ -1,196 +1,125 @@
-
-.bg-custom {
-  background-color: #3D3C3C;
-  font-family: Frefoka system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-.Title {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  background-color: #000000;
-  color: #fff;
-  padding: 15px;
-  border-radius: 5px;
-  text-align: left;
-}
-
-.Title h1 {
-  margin-right: 10px;
-}
-
-.fa-solid.fa-car {
-  font-size: 300%;
-  color: #FCEC26;
-}
-
-.menu {
-  position: absolute;
-  right: 10%;
-  top: 5%;
-}
-
-.menu p {
-  display: inline;
-  cursor: pointer;
-  margin: 0 20px;
-  color: #FCEC26;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.menu p:hover {
-  background-color: #ede8aac9;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-}
-
-.Historial {
-  background-color: #F0F0F0;
-  padding: 20px;
-  border-radius: 10px;
-  width: 50%;
-  margin: 0 auto;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 5px;
-}
-
-input[type="date"],
-input[type="time"] {
-  width: 100%;
-  padding: 5px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-#consultar {
-  background-color: #FCEC26;
-  color: #000000;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-#consultar:hover {
-  background-color: #ede8aac9;
-}
-
-#consultar:focus {
-  outline: none;
-}
-
-.latitude,
-.longitude,
-.fecha,
-#limpiar {
-  display: inline-block;
-  margin-top: 3%;
-  margin-right: 20px;
-  background-color: #EEEEEE;
-  padding: 8px;
-  border-radius: 9px;
-  width: 80%;
-}
-
-#limpiar {
-  display: none;
-  background-color: #FCEC26;
-  color: #000000;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#limpiar:hover {
-  background-color: #ede8aac9;
-}
-
-#limpiar:focus {
-  outline: none;
-}
-
-[data-content],
-#limpiar {
-  display: none;
-}
-
-.avtive[data-content],
-#limpiar {
-  display: block;
-}
-
-#map {
-  border-radius: 10px;
-  height: 470px;
-  margin: 68px auto 0 auto;
-  width: 85%;
-}
-
-.slider {
-  text-align: center;
-  padding: 20px;
-  display: inline-block;
-}
-
-.slider label {
-  font-size: 16px;
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.slider input[type="range"] {
-  width: 80%;
-  height: 5px;
-  background-color: #ccc;
-  border: none;
-  outline: none;
-  cursor: pointer;
-}
-
-.slider input[type="range"]::-webkit-slider-thumb {
-  width: 20px;
-  height: 20px;
-  background-color: #FCEC26;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  -webkit-appearance: none;
-}
-
-.slider input[type="range"]::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  background-color: #FCEC26;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-label[for="historialSlider"] {
-  background-color: #EEEEEE;
-  padding: 8px;
-  border-radius: 9px;
-  width: 80%;
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-  display: inline-block;
-}
-
-#errorMensaje {
-  color: red;
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
+body {
+    background-color: #27374D;
+    font-family: Frefoka system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  
+  .Title {
+    text-align: left;
+    background-color: #051D40;
+    color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+  }
+  
+  .fa-solid.fa-car {
+    font-size: 300%;
+    color: #56AEFF;
+    position: absolute;
+    right: 82%;
+    top: 7%;
+  }
+  
+  .menu {
+    position: absolute;
+    right: 10%;
+    top: 10%
+  }
+  
+  .menu p {
+    display: inline;
+    cursor: pointer;
+    margin: 0 20px;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  .menu p:hover {
+    background-color: #56AEFF;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .Historial {
+    background-color: #F0F0F0;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  input[type="date"],
+  input[type="time"] {
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  #consultar {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  #consultar:hover {
+    background-color: #0056b3;
+  }
+  
+  #consultar:focus {
+    outline: none;
+  }
+  
+  .latitude,
+  .longitude,
+  .fecha,
+  #limpiar {
+    display: inline-block;
+    margin-right: 20px;
+    background-color: #EEEEEE;
+    padding: 8px;
+    border-radius: 9px;
+    width: 15%;
+  }
+  
+  #limpiar {
+    display: none;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #limpiar:hover {
+    background-color: #3e94f0;
+  }
+  
+  #limpiar:focus {
+    outline: none;
+  }
+  
+  [data-content],
+  #limpiar {
+    display: none;
+  }
+  
+  .avtive[data-content],
+  #limpiar {
+    display: block;
+  }
+  
+  
