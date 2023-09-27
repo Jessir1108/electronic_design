@@ -129,3 +129,41 @@ app.get('/consultar', (req, res) => {
     }
   );
 });
+
+
+
+
+
+app.get('/consultarCoordenadas', (req, res) => {
+  const { latitud, longitud } = req.query;
+
+  // Define un radio en el que se buscarán coordenadas (ajusta el valor según tus necesidades)
+  const radioKilometros = 1;
+
+  // Calcula las coordenadas límite del área alrededor del marcador
+  const latitudMin = parseFloat(latitud) - (radioKilometros / 110.574);
+  const latitudMax = parseFloat(latitud) + (radioKilometros / 110.574);
+  const longitudMin = parseFloat(longitud) - (radioKilometros / (111.320 * Math.cos(latitudMin * Math.PI / 180)));
+  const longitudMax = parseFloat(longitud) + (radioKilometros / (111.320 * Math.cos(latitudMax * Math.PI / 180)));
+
+  // Consulta las coordenadas dentro del área
+  const consultaSQL = `
+    SELECT latitud, longitud, fecha, hora
+    FROM coordenadas
+    WHERE latitud >= ? AND latitud <= ? AND longitud >= ? AND longitud <= ?
+  `;
+
+  dbClient.query(
+    consultaSQL,
+    [latitudMin, latitudMax, longitudMin, longitudMax],
+    (err, results) => {
+      if (err) {
+        console.error('Error al realizar la consulta de coordenadas:', err);
+        res.status(500).json({ error: 'Error en la consulta' });
+      } else {
+        // Devuelve los resultados como JSON
+        res.json(results);
+      }
+    }
+  );
+});

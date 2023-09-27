@@ -10,6 +10,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="\scripts\scrip.js" defer></script>
 
+  <style>
+    #historialSlider {
+      width: 100%; /* Ajusta el ancho según tus necesidades, puede ser un porcentaje o un valor en píxeles */
+      /* Otros estilos adicionales si los necesitas */
+    }
+  </style>
+
 </head>
 <body>
     <div class = "Title">
@@ -44,6 +51,7 @@
       
       <button id="consultar">Consultar</button>
       <div id="errorMensaje" style="color: red;"></div>
+      <div id="dataContainer"></div>
 
     </div>
 
@@ -64,30 +72,131 @@
     let polyline;
     const locationHistory = [];
     let modo = "Live"
-
+    let consultarClickeado = false;
+    let clickMarkerHistorial
+    
     function initializeMap() {
       map = L.map('map').setView([10.9854, -74.7769], 15);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
       setupSlider();
     }
 
+    // Inicializa el mapa
+    initializeMap();
+
+    
+
+    
+
     window.addEventListener('load', () => {
       initializeMap();
     });
+
+    let selectedDate = '';
+    let selectedTime = '';
 
     function setupSlider() {
       const slider = document.getElementById('historialSlider');
       slider.addEventListener('input', () => {
         const selectedIndex = slider.value;
         updateMarker(selectedIndex);
+        showData(selectedIndex);
       });
     }
+
+    function showData(selectedIndex) {
+      if (locationHistory.length > 0 && selectedIndex >= 0 && selectedIndex < locationHistory.length) {
+        const selectedLocation = locationHistory[selectedIndex];
+        const [latitude, longitude, fecha] = selectedLocation;
+
+        // Mostrar los datos en un cuadro de texto
+        console.log(fecha)
+        const fechaObj = new Date(fecha);
+        const fechast = fechaObj.toISOString().split("T")[0];
+        const dataText = `Latitud: ${latitude}, Longitud: ${longitude}, Fecha: ${fechast}`;
+        const dataContainer = document.getElementById('dataContainer');
+        dataContainer.textContent = ''; // Vaciar el contenido existente
+        const dataTextNode = document.createTextNode(dataText);
+        dataContainer.appendChild(dataTextNode); // Agregar el nuevo contenido como un nodo de texto
+      }
+    }
+
+    
+    
+
+    const radiusInMeters = 1000;
+
+    map.on('click', function (e) {
+      if (modo === "Historial") {
+        if (clickMarkerHistorial) {
+          map.removeLayer(clickMarkerHistorial); // Eliminar el marcador anterior si existe
+          removeRectangle(); // Elimina el cuadrado anterior si existe
+        }
+
+        clickMarkerHistorial = L.marker(e.latlng).addTo(map);
+
+        // Calcula las esquinas del cuadrado alrededor del marcador de clic
+        const squareBounds = L.latLngBounds([
+          [e.latlng.lat - 0.009, e.latlng.lng - 0.009],
+          [e.latlng.lat + 0.009, e.latlng.lng + 0.009],
+        ]);
+
+        // Crea el cuadrado alrededor del marcador de clic
+        rectangle = L.rectangle(squareBounds, { color: 'blue' }).addTo(map);
+
+        // Obtener las coordenadas del marcador de clic
+        const latitud = e.latlng.lat.toFixed(6);
+        const longitud = e.latlng.lng.toFixed(6);
+        
+        // Realizar una consulta en el servidor basada en la latitud y longitud
+        fetch(`/consultarCoordenadas?latitud=${latitud}&longitud=${longitud}`)
+          .then(response => response.json())
+          .then(data => {
+            // Limpia el mapa antes de agregar nuevos resultados
+            clearMap();
+            locationHistory.length = 0;
+
+            data.forEach((item, index) => {
+              const [latitud, longitud, fecha, hora] = [item.latitud, item.longitud, item.fecha, item.hora];
+              updateData(`Latitud: ${latitud}, Longitud: ${longitud}, Fecha: ${fecha}, Hora: ${hora}`);
+              document.getElementById('historialSlider').max = index; // Actualiza la cantidad máxima del deslizador
+            });
+          })
+          .catch(error => console.error('Error al realizar la consulta:', error));
+      }
+
+
+
+
+    });
+
 
     consultarButton.addEventListener('click', () => {
       const fechaInicio = document.getElementById('fechaInicio').value;
       const horaInicio = document.getElementById('horaInicio').value;
       const fechaFin = document.getElementById('fechaFin').value;
       const horaFin = document.getElementById('horaFin').value;
+      consultarClickeado = true;
+      removeRectangle();
+      removeclick();
+
+
+      // Validación de fechas
+      const fechaInicioObj = new Date(fechaInicio);
+      const fechaFinObj = new Date(fechaFin);
+
+      if (fechaInicioObj > fechaFinObj) {
+        // Mostrar mensaje de error en el index
+        document.getElementById('errorMensaje').innerText = 'La fecha inicial no puede ser posterior a la fecha final.';
+        return; // Salir de la función si hay un error
+      } else if (fechaInicioObj.getTime() === fechaFinObj.getTime() && horaInicio > horaFin) {
+        // Mostrar mensaje de error en el index
+        document.getElementById('errorMensaje').innerText = 'La hora inicial no puede ser mayor que la hora final en la misma fecha.';
+        return; // Salir de la función si hay un error
+      } else {
+        // Si las fechas y horas son válidas, oculta el mensaje de error
+        document.getElementById('errorMensaje').innerText = ''; // Vacía el contenido del mensaje de error
+      }
 
       // Validación de fechas
       const fechaInicioObj = new Date(fechaInicio);
@@ -139,7 +248,7 @@
       document.getElementById('longitude').textContent = longitude;
       document.getElementById('fecha').textContent = fecha;
 
-      const location = [latitude, longitude];
+      const location = [latitude, longitude, fecha];
 
       locationHistory.push(location);
 
@@ -190,6 +299,22 @@
       document.getElementById('historialSlider').max = 0;
       document.getElementById('historialSlider').value = 0;
     }
+
+    function removeclick(){
+      if (clickMarkerHistorial){
+        map.removeLayer(clickMarkerHistorial)
+        clickMarkerHistorial = null;
+
+      }
+    }
+
+    function removeRectangle() {
+      if (rectangle) {
+        map.removeLayer(rectangle);
+        rectangle = null;
+      }
+    }
+
   </script>
 
 
