@@ -141,8 +141,8 @@ app.get('/consultarCoordenadas', (req, res) => {
   const radioKilometros = 1;
 
   // Calcula las coordenadas límite del área alrededor del marcador
-  const latitudMin = parseFloat(latitud) - (radioKilometros / 110.574);
-  const latitudMax = parseFloat(latitud) + (radioKilometros / 110.574);
+  const latitudMin = parseFloat(latitud) - (radioKilometros / 111.320);
+  const latitudMax = parseFloat(latitud) + (radioKilometros / 111.320);
   const longitudMin = parseFloat(longitud) - (radioKilometros / (111.320 * Math.cos(latitudMin * Math.PI / 180)));
   const longitudMax = parseFloat(longitud) + (radioKilometros / (111.320 * Math.cos(latitudMax * Math.PI / 180)));
 
