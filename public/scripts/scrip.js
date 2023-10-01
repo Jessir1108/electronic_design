@@ -1,3 +1,14 @@
+//Establecer fecha y hora actual para formulario
+const currentDate = new Date();
+const currentDateString = currentDate.toISOString().split('T')[0]; // Formato "YYYY-MM-DD"
+const currentTimeString = currentDate.toLocaleTimeString('en-US', { hour12: false }); // Formato "HH:MM"
+
+// Asigna los valores actuales a los campos de fecha y hora
+document.getElementById('fechaFin').value = currentDateString;
+document.getElementById('fechaFin').max = currentDateString;
+document.getElementById('horaFin').value = currentTimeString;
+
+
 // Función para mostrar el contenido de Live
 function mostrarLive() {
     if (modo !== "Live") {
@@ -57,7 +68,3 @@ document.querySelector('p[data-target="#Historial"]').addEventListener('click', 
 
 // Inicialmente, ocultar el contenido de Live y Historial
 mostrarLive();
-
-  
-  
-  
