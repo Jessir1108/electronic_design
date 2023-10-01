@@ -62,9 +62,12 @@
       
       <label for="horaFin">Hora de fin:</label>
       <input type="time" id="horaFin">
+
+      
       
       <button id="consultar">Consultar</button>
       <div id="errorMensaje" style="color: red;"></div>
+      <div id="dataContainer"></div>
 
       <div class = "slider">
         <label for="historialSlider">Seleccionar punto en el historial:</label>
@@ -86,6 +89,7 @@
     let marker;
     let polyline;
     const locationHistory = [];
+    const locationHistoryshow = [];
     let modo = "Live"
     let consultarClickeado = false;
     let clickMarkerHistorial
@@ -120,22 +124,21 @@
     }
 
     function showData(selectedIndex) {
-      if (locationHistory.length > 0 && selectedIndex >= 0 && selectedIndex < locationHistory.length) {
-        const selectedLocation = locationHistory[selectedIndex];
-        const [latitude, longitude, fecha] = selectedLocation;
+      if (locationHistoryshow.length > 0 && selectedIndex >= 0 && selectedIndex < locationHistoryshow.length) {
+        const selectedLocation = locationHistoryshow[selectedIndex];
+        const [latitude, longitude, fecha, hora] = selectedLocation;
 
         // Mostrar los datos en un cuadro de texto
         console.log(fecha)
         const fechaObj = new Date(fecha);
         const fechast = fechaObj.toISOString().split("T")[0];
-        const dataText = `Latitud: ${latitude}, Longitud: ${longitude}, Fecha: ${fechast}`;
+        const dataText = `Latitud: ${latitude}, Longitud: ${longitude}, Fecha: ${fechast}, Hora: ${hora}`;
         const dataContainer = document.getElementById('dataContainer');
         dataContainer.textContent = ''; // Vaciar el contenido existente
         const dataTextNode = document.createTextNode(dataText);
         dataContainer.appendChild(dataTextNode); // Agregar el nuevo contenido como un nodo de texto
       }
     }
-
     
     
 
@@ -149,6 +152,7 @@
         }
 
         clickMarkerHistorial = L.marker(e.latlng).addTo(map);
+        map.removeLayer(clickMarkerHistorial);
 
         // Calcula las esquinas del cuadrado alrededor del marcador de clic
         const squareBounds = L.latLngBounds([
@@ -177,7 +181,7 @@
               document.getElementById('historialSlider').max = index; // Actualiza la cantidad máxima del deslizador
             });
           })
-          .catch(error => console.error('Error al realizar la consulta:', error));
+          .catch(error => console.error('Error al realizar la consulta22:', error));
       }
 
 
@@ -192,8 +196,11 @@
       const fechaFin = document.getElementById('fechaFin').value;
       const horaFin = document.getElementById('horaFin').value;
       consultarClickeado = true;
-      removeRectangle();
-      removeclick();
+      if (clickMarkerHistorial) {
+          map.removeLayer(clickMarkerHistorial); // Eliminar el marcador anterior si existe
+          removeRectangle(); // Elimina el cuadrado anterior si existe
+          removeclick()
+     }
 
 
       // Validación de fechas
@@ -240,10 +247,15 @@
     }
 
     function updateData(data) {
-      const [latitudePart, longitudePart, fechaPart] = data.split(', ');
+      const [latitudePart, longitudePart, fechaPart, horaPart] = data.split(', ');
       const latitude = parseFloat(latitudePart.split(': ')[1]);
       const longitude = parseFloat(longitudePart.split(': ')[1]);
+      const horaMatch = horaPart.match(/Hora: (\d+:\d+:\d+)/);
+      // Dividir fechaPart en fecha y hora
       const fecha = fechaPart.split(': ')[1];
+      const hora = horaMatch[1];
+
+      console.log(`Latitud: ${latitude}, Longitud: ${longitude}, Fecha: ${fecha}, Hora: ${hora}`);
   
 
       document.getElementById('latitude').textContent = latitude;
@@ -251,7 +263,9 @@
       document.getElementById('fecha').textContent = fecha;
 
       const location = [latitude, longitude, fecha];
-
+      const locationshow = [latitude, longitude, fecha, hora];
+      console.log(`Latitud: ${latitude}, Longitud: ${longitude}, Fecha: ${fecha}, Hora: ${hora}`);
+      locationHistoryshow.push(locationshow);
       locationHistory.push(location);
 
       map.setView(location);
