@@ -74,6 +74,11 @@
         <input type="range" id="historialSlider" min="0" max="0" step="1" value="0">
       </div>
 
+      <div class = "slider">
+        <label for="areaslider">Escoja el valor del área que desea cubrir:</label>
+        <input type="range" id="areaslider" min="0.0009" max="0.027" step="0.0009" value="0.0009">
+      </div>
+
     </div>
 
     <ul id="resultado">
@@ -93,6 +98,8 @@
     let modo = "Live"
     let consultarClickeado = false;
     let clickMarkerHistorial
+    const areaSlider = document.getElementById('areaslider'); // Obtén el elemento del slider
+    let area = parseFloat(areaSlider.value); 
     
     function initializeMap() {
       map = L.map('map').setView([10.9854, -74.7769], 15);
@@ -102,10 +109,6 @@
 
     // Inicializa el mapa
     initializeMap();
-
-    
-
-    
 
     window.addEventListener('load', () => {
       initializeMap();
@@ -121,7 +124,14 @@
         updateMarker(selectedIndex);
         showData(selectedIndex);
       });
+        // Agrega un evento para escuchar cambios en el slider de "area"
+      areaSlider.addEventListener('input', () => {
+        area = parseFloat(areaSlider.value); // Actualiza el valor de "area" con el valor del slider
+        // Luego, puedes realizar cualquier operación que requiera el nuevo valor de "area"
+        updateRectangle(); // Por ejemplo, actualiza el rectángulo en el mapa
+      });
     }
+    
 
     function showData(selectedIndex) {
       if (locationHistoryshow.length > 0 && selectedIndex >= 0 && selectedIndex < locationHistoryshow.length) {
@@ -132,18 +142,16 @@
         console.log(fecha)
         const fechaObj = new Date(fecha);
         const fechast = fechaObj.toISOString().split("T")[0];
-        const dataText = `Latitud: ${latitude}, Longitud: ${longitude}, Fecha: ${fechast}, Hora: ${hora}`;
+        const dataText = `Fecha: ${fechast}, Hora: ${hora}`;
         const dataContainer = document.getElementById('dataContainer');
         dataContainer.textContent = ''; // Vaciar el contenido existente
         const dataTextNode = document.createTextNode(dataText);
         dataContainer.appendChild(dataTextNode); // Agregar el nuevo contenido como un nodo de texto
       }
     }
-    
-    
 
-    const radiusInMeters = 1000;
 
+    
     map.on('click', function (e) {
       if (modo === "Historial") {
         if (clickMarkerHistorial) {
@@ -156,21 +164,24 @@
 
         // Calcula las esquinas del cuadrado alrededor del marcador de clic
         const squareBounds = L.latLngBounds([
-          [e.latlng.lat - 0.009, e.latlng.lng - 0.009],
-          [e.latlng.lat + 0.009, e.latlng.lng + 0.009],
+          [e.latlng.lat - area, e.latlng.lng - area],
+          [e.latlng.lat + area, e.latlng.lng + area],
         ]);
 
-        // Crea el cuadrado alrededor del marcador de clic
-        rectangle = L.rectangle(squareBounds, { color: 'blue' }).addTo(map);
+        rectangle = L.rectangle(squareBounds, { color: 'yellow' }).addTo(map);
 
-        // Obtener las coordenadas del marcador de clic
-        const latitud = e.latlng.lat.toFixed(6);
-        const longitud = e.latlng.lng.toFixed(6);
-        
-        // Realizar una consulta en el servidor basada en la latitud y longitud
-        fetch(`/consultarCoordenadas?latitud=${latitud}&longitud=${longitud}`)
-          .then(response => response.json())
-          .then(data => {
+          // Obtener las coordenadas del marcador de clic
+          const latitud = e.latlng.lat.toFixed(6);
+          const longitud = e.latlng.lng.toFixed(6);
+
+          // Obtener el valor de radioKilometros (asegúrate de definirlo previamente)
+          const radioKilometros = area*111;
+          console.log(area) // Ejemplo: aquí deberías obtener el valor deseado
+
+          // Realizar una consulta en el servidor basada en la latitud, longitud y radioKilometros
+          fetch(`/consultarCoordenadas?latitud=${latitud}&longitud=${longitud}&radioKilometros=${radioKilometros}`)
+            .then(response => response.json())
+            .then(data => {
             // Limpia el mapa antes de agregar nuevos resultados
             clearMap();
             locationHistory.length = 0;
@@ -332,10 +343,6 @@
     }
 
   </script>
-
-
-
-
   <script src="/socket.io/socket.io.js"></script>
   <script>
   
