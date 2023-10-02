@@ -135,10 +135,7 @@ app.get('/consultar', (req, res) => {
 
 
 app.get('/consultarCoordenadas', (req, res) => {
-  const { latitud, longitud } = req.query;
-
-  // Define un radio en el que se buscarán coordenadas (ajusta el valor según tus necesidades)
-  const radioKilometros = 1;
+  const { latitud, longitud, radioKilometros } = req.query;
 
   // Calcula las coordenadas límite del área alrededor del marcador
   const latitudMin = parseFloat(latitud) - (radioKilometros / 111.320);
